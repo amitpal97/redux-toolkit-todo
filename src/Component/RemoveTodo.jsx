@@ -1,25 +1,35 @@
-import React from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { removeTodo } from "../slice/todo/todoSlice";
+import { removeTodo, updateTodo } from "../slice/todo/todoSlice";
 
 
 
 function Todo() {
     const todos = useSelector(state => state.todos)
-    console.log("todos", todos);
+    const [isTodoEditable, setIsTodoEditable] = useState(false);
+    const [todoMsg, setTodoMSg] = useState("")
 
+    console.log("todos", todos);
     const dispatch = useDispatch();
+
 
     return (<>
 
         <div>Todos</div>
+
         <ul className="list-none">
             {todos.map((todo) => (
+
+
                 <li
                     className="mt-4 flex justify-between items-center bg-zinc-800 px-4 py-2 rounded"
                     key={todo.id}
                 >
-                    <div className='text-white'>{todo.todoMsg}</div>
+                    <input className='text-black' value={todo.text} onChange={(e) => {
+                        
+                        dispatch(updateTodo({ text: todo.e.target.value }))
+                    }}
+                        disabled={!isTodoEditable} />
                     <button
                         onClick={() => dispatch(removeTodo(todo.id))}
                         className="text-white bg-red-500 border-0 py-1 px-4 focus:outline-none hover:bg-red-600 rounded text-md"
@@ -39,9 +49,22 @@ function Todo() {
                             />
                         </svg>
                     </button>
+                    <button
+                        className="inline-flex w-8 h-8 rounded-lg text-sm border border-black/10 justify-center items-center bg-gray-50 hover:bg-gray-100 shrink-0 disabled:opacity-50"
+                        onClick={() => {
+                            if (todo.completed) return;
+
+                            if (isTodoEditable) {
+                                dispatch(updateTodo({ id: todo.id, text: todo.text }))
+                            } else setIsTodoEditable((prev) => !prev);
+                        }}
+                        disabled={todo.completed}
+                    >
+                        {isTodoEditable ? "📁" : "✏️"}
+                    </button>
                 </li>
             ))}
-        </ul>
+        </ul >
     </>)
 }
 

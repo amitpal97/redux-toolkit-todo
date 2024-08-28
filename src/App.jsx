@@ -1,9 +1,10 @@
 import AddTodo from "./Component/AddTodo"
-import Todo from "./Component/Todo"
+import Todo from "./Component/RemoveTodo"
+import "./App.css"
 
 function App() {
   return (
-    <>Hii redux Toolkit
+    <>
       <AddTodo />
       <Todo />
     </>
